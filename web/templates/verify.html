@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>证书验真</h2>
+<p class="hint">
+  合约会重新计算链上证书内容的 SHA256（计算时排除 hash 字段本身），并与链上保存的哈希比对，
+  同时校验证书状态。任何字段被篡改都会导致哈希不一致。
+</p>
+
+<form method="POST" class="card">
+  <div class="field">
+    <label for="cert_id">证书 ID</label>
+    <input type="text" id="cert_id" name="cert_id" placeholder="例如：cert_2025211762_1a2b3c4d"
+           value="{{ cert_id }}" required>
+  </div>
+  <div class="actions">
+    <button type="submit" class="btn btn-primary">开始验真</button>
+    <a class="btn btn-secondary" href="{{ url_for('index') }}">返回首页</a>
+  </div>
+</form>
+
+{% include '_result.html' %}
+
+{% if result and result.ok and result.payload is mapping %}
+  <div class="verify-box {{ 'verify-ok' if result.payload.valid else 'verify-bad' }}">
+    {% if result.payload.valid %}
+      <strong>✔ 证书真实有效</strong>　哈希与链上记录一致，状态为 valid。
+    {% else %}
+      <strong>✘ 校验未通过</strong>　
+      {% if result.payload.status != 'valid' %}该证书状态为 {{ result.payload.status }}（已被撤销）。{% else %}重算哈希与链上哈希不一致，证书内容可能被篡改。{% endif %}
+    {% endif %}
+  </div>
+  <table class="table kv">
+    <tbody>
+      <tr><th>证书 ID</th><td><code>{{ result.payload.cert_id }}</code></td></tr>
+      <tr><th>证书状态</th><td>{{ result.payload.status }}</td></tr>
+      <tr><th>链上哈希</th><td><code class="hash">{{ result.payload.hash_on_chain }}</code></td></tr>
+      <tr><th>重算哈希</th><td><code class="hash">{{ result.payload.hash_recomputed }}</code></td></tr>
+      <tr><th>比对结果</th><td>{{ '一致' if result.payload.hash_on_chain == result.payload.hash_recomputed else '不一致' }}</td></tr>
+    </tbody>
+  </table>
+{% endif %}
+{% endblock %}

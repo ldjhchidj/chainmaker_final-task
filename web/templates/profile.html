@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>用户信息</h2>
+
+<div class="card narrow">
+  <table class="table kv">
+    <tbody>
+      <tr><th>用户名</th><td><code>{{ user.username }}</code></td></tr>
+      <tr><th>角色</th><td>{{ user.role|role_label }}（{{ user.role }}）</td></tr>
+      <tr><th>权限范围</th><td>
+        {% if user.role == 'query' %}
+          查询证书、证书验真
+        {% elif user.role == 'uni' %}
+          颁发证书、查询证书、证书验真
+        {% elif user.role == 'edu' %}
+          颁发证书、查询证书、撤销证书、查看全量台账、证书验真
+        {% else %}
+          无
+        {% endif %}
+      </td></tr>
+      <tr><th>身份载体</th><td>SQLite（users 表），口令以 bcrypt 散列存储</td></tr>
+      <tr><th>上链身份</th><td>由 cmc 读取的 sdk_config.yml 中的组织证书决定（wx-org1.chainmaker.org）</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<a class="btn btn-secondary" href="{{ url_for('index') }}">返回首页</a>
+{% endblock %}

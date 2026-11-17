@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>颁发新证书</h2>
+<p class="hint">仅高校账号（uni）可颁发证书。提交后由合约计算 SHA256、生成证书 ID 并双索引上链。</p>
+
+<form method="POST" class="card">
+  <div class="grid">
+    <div class="field">
+      <label for="student_id">学生 ID <span class="req">*</span></label>
+      <input type="text" id="student_id" name="student_id" placeholder="例如：2025211762"
+             value="{{ form.student_id|default('') }}" required>
+    </div>
+    <div class="field">
+      <label for="name">姓名 <span class="req">*</span></label>
+      <input type="text" id="name" name="name" placeholder="例如：杨秩宇"
+             value="{{ form.name|default('') }}" required>
+    </div>
+    <div class="field">
+      <label for="eduction">学历层次 <span class="req">*</span></label>
+      <input type="text" id="eduction" name="eduction" placeholder="例如：本科 / 硕士"
+             value="{{ form.eduction|default('') }}" required>
+    </div>
+    <div class="field">
+      <label for="school_name">毕业院校 <span class="req">*</span></label>
+      <input type="text" id="school_name" name="school_name" placeholder="例如：北京邮电大学"
+             value="{{ form.school_name|default('') }}" required>
+    </div>
+    <div class="field">
+      <label for="major">专业 <span class="req">*</span></label>
+      <input type="text" id="major" name="major" placeholder="例如：计算机科学与技术"
+             value="{{ form.major|default('') }}" required>
+    </div>
+    <div class="field">
+      <label for="issue_date">颁发日期 <span class="req">*</span></label>
+      <input type="text" id="issue_date" name="issue_date" placeholder="YYYYMMDD，例如 20260701"
+             pattern="\d{8}" title="8 位数字，格式 YYYYMMDD"
+             value="{{ form.issue_date|default('') }}" required>
+    </div>
+    <div class="field">
+      <label for="graduation_date">毕业日期 <span class="req">*</span></label>
+      <input type="text" id="graduation_date" name="graduation_date" placeholder="YYYYMMDD，例如 20260620"
+             pattern="\d{8}" title="8 位数字，格式 YYYYMMDD"
+             value="{{ form.graduation_date|default('') }}" required>
+    </div>
+  </div>
+  <div class="actions">
+    <button type="submit" class="btn btn-primary">颁发证书</button>
+    <a class="btn btn-secondary" href="{{ url_for('index') }}">返回首页</a>
+  </div>
+</form>
+
+{% include '_result.html' %}
+{% endblock %}

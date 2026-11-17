@@ -1,0 +1,47 @@
+# cmc 使用的链配置模板。复制到
+#   ~/chainmaker-lab/chainmaker-go/tools/cmc/testdata/sdk_config.yml
+# 并把 <YOUR_HOME> 替换为你的家目录绝对路径（如 /home/yangtao6755）。
+#
+# 注意：指导手册明确要求这里必须用绝对路径，不能用 "./"，
+#       否则在 web/ 目录下用 subprocess 调 cmc 时会找不到证书。
+chain_client:
+  chain_id: "chain1"
+  org_id: "wx-org1.chainmaker.org"
+
+  # 客户端 TLS 私钥 / 证书
+  user_key_file_path: "<YOUR_HOME>/chainmaker-lab/chainmaker-go/tools/cmc/testdata/crypto-config/wx-org1.chainmaker.org/user/client1/client1.tls.key"
+  user_crt_file_path: "<YOUR_HOME>/chainmaker-lab/chainmaker-go/tools/cmc/testdata/crypto-config/wx-org1.chainmaker.org/user/client1/client1.tls.crt"
+  # 客户端交易签名私钥 / 证书
+  user_sign_key_file_path: "<YOUR_HOME>/chainmaker-lab/chainmaker-go/tools/cmc/testdata/crypto-config/wx-org1.chainmaker.org/user/client1/client1.sign.key"
+  user_sign_crt_file_path: "<YOUR_HOME>/chainmaker-lab/chainmaker-go/tools/cmc/testdata/crypto-config/wx-org1.chainmaker.org/user/client1/client1.sign.crt"
+
+  retry_limit: 10
+  retry_interval: 500
+  enable_normal_key: false
+  enable_tx_result_dispatcher: true
+
+  nodes:
+    - node_addr: "127.0.0.1:12301"
+      conn_cnt: 10
+      enable_tls: true
+      trust_root_paths:
+        - "<YOUR_HOME>/chainmaker-lab/chainmaker-go/tools/cmc/testdata/crypto-config/wx-org1.chainmaker.org/ca"
+      tls_host_name: "chainmaker.org"
+    - node_addr: "127.0.0.1:12302"
+      conn_cnt: 10
+      enable_tls: true
+      trust_root_paths:
+        - "<YOUR_HOME>/chainmaker-lab/chainmaker-go/tools/cmc/testdata/crypto-config/wx-org2.chainmaker.org/ca"
+      tls_host_name: "chainmaker.org"
+    - node_addr: "127.0.0.1:12303"
+      conn_cnt: 10
+      enable_tls: true
+      trust_root_paths:
+        - "<YOUR_HOME>/chainmaker-lab/chainmaker-go/tools/cmc/testdata/crypto-config/wx-org3.chainmaker.org/ca"
+      tls_host_name: "chainmaker.org"
+    - node_addr: "127.0.0.1:12304"
+      conn_cnt: 10
+      enable_tls: true
+      trust_root_paths:
+        - "<YOUR_HOME>/chainmaker-lab/chainmaker-go/tools/cmc/testdata/crypto-config/wx-org4.chainmaker.org/ca"
+      tls_host_name: "chainmaker.org"

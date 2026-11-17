@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-head">
+  <h2>全部证书台账</h2>
+  <a class="btn btn-secondary" href="{{ url_for('index') }}">返回首页</a>
+</div>
+
+{% if result and result.error %}
+  <div class="alert alert-danger">{{ result.error }}</div>
+{% elif result and not result.ok %}
+  <div class="alert alert-danger"><strong>合约返回错误</strong>：{{ result.message }}</div>
+{% endif %}
+
+{% if certs %}
+  <p class="hint">共 <strong>{{ certs|length }}</strong> 条证书记录（含已撤销），按证书 ID 升序排列。</p>
+  <div class="table-scroll">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>学生 ID</th><th>姓名</th><th>学历层次</th><th>毕业院校</th><th>专业</th>
+          <th>颁发日期</th><th>毕业日期</th><th>证书 ID</th><th>内容哈希</th><th>状态</th>
+          <th>颁发交易 ID</th><th>颁发机构</th><th>撤销原因</th><th>撤销交易 ID</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for cert in certs %}
+        <tr>
+          <td>{{ cert.student_id }}</td>
+          <td>{{ cert.name }}</td>
+          <td>{{ cert.eduction }}</td>
+          <td>{{ cert.school_name }}</td>
+          <td>{{ cert.major }}</td>
+          <td>{{ cert.issue_date }}</td>
+          <td>{{ cert.graduation_date }}</td>
+          <td><code>{{ cert.cert_id }}</code></td>
+          <td><code class="hash">{{ cert.hash }}</code></td>
+          <td>
+            {% if cert.status == 'valid' %}
+              <span class="badge badge-ok">valid</span>
+            {% else %}
+              <span class="badge badge-bad">revoked</span>
+            {% endif %}
+          </td>
+          <td><code>{{ cert.tx_id }}</code></td>
+          <td>{{ cert.issuer_org }}</td>
+          <td>{{ cert.revoke_reason or '—' }}</td>
+          <td>{{ cert.revoke_tx_id or '—' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% elif result and result.ok %}
+  <div class="alert alert-warn">链上暂无证书记录，请先用高校账号颁发一份证书。</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}基于长安链的学历证书存证系统{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="navbar">
+  <div class="nav-inner">
+    <a class="brand" href="{{ url_for('index') }}">学历证书存证系统</a>
+    <nav class="nav-links">
+      {% if session.username %}
+        <span class="nav-user">欢迎，{{ session.username }}（{{ session.role|role_label }}）</span>
+        <a href="{{ url_for('profile') }}">用户信息</a>
+        <a href="{{ url_for('logout') }}">退出登录</a>
+      {% else %}
+        <a href="{{ url_for('login') }}">登录</a>
+      {% endif %}
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <div class="system-title">基于长安链的学历证书存证系统</div>
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="footer">ChainMaker v2.3.4 · DOCKER_GO 智能合约 · Flask 全栈演示系统</footer>
+</body>
+</html>

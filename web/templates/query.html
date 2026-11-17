@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>查询证书</h2>
+
+<div class="hint">
+  支持两种查询方式（二选一即可）：<br>
+  ① 填写<strong>证书 ID</strong> 精准查询；<br>
+  ② 填写<strong>学生 ID + 姓名</strong> 组合查询。
+</div>
+
+<form method="POST" id="queryForm" class="card">
+  <div class="grid grid-3">
+    <div class="field">
+      <label for="student_id">学生 ID</label>
+      <input type="text" id="student_id" name="student_id" placeholder="例如：2025211762"
+             value="{{ form.student_id|default('') }}">
+    </div>
+    <div class="field">
+      <label for="name">姓名</label>
+      <input type="text" id="name" name="name" placeholder="例如：杨秩宇"
+             value="{{ form.name|default('') }}">
+    </div>
+    <div class="field">
+      <label for="cert_id">证书 ID</label>
+      <input type="text" id="cert_id" name="cert_id" placeholder="例如：cert_2025211762_1a2b3c4d"
+             value="{{ form.cert_id|default('') }}">
+    </div>
+  </div>
+  <div class="actions">
+    <button type="submit" class="btn btn-primary">查询证书</button>
+    <a class="btn btn-secondary" href="{{ url_for('index') }}">返回首页</a>
+  </div>
+</form>
+
+{% include '_result.html' %}
+
+{% if result and result.ok and result.payload is mapping %}
+  <h3>证书详情</h3>
+  <table class="table kv">
+    <tbody>
+      <tr><th>学生 ID</th><td>{{ result.payload.student_id }}</td></tr>
+      <tr><th>姓名</th><td>{{ result.payload.name }}</td></tr>
+      <tr><th>学历层次</th><td>{{ result.payload.eduction }}</td></tr>
+      <tr><th>毕业院校</th><td>{{ result.payload.school_name }}</td></tr>
+      <tr><th>专业</th><td>{{ result.payload.major }}</td></tr>
+      <tr><th>颁发日期</th><td>{{ result.payload.issue_date }}</td></tr>
+      <tr><th>毕业日期</th><td>{{ result.payload.graduation_date }}</td></tr>
+      <tr><th>证书 ID</th><td><code>{{ result.payload.cert_id }}</code></td></tr>
+      <tr><th>内容哈希</th><td><code class="hash">{{ result.payload.hash }}</code></td></tr>
+      <tr>
+        <th>状态</th>
+        <td>
+          {% if result.payload.status == 'valid' %}
+            <span class="badge badge-ok">valid（有效）</span>
+          {% else %}
+            <span class="badge badge-bad">revoked（已撤销）</span>
+          {% endif %}
+        </td>
+      </tr>
+      <tr><th>颁发交易 ID</th><td><code>{{ result.payload.tx_id }}</code></td></tr>
+      <tr><th>颁发机构</th><td>{{ result.payload.issuer_org }}</td></tr>
+      <tr><th>撤销原因</th><td>{{ result.payload.revoke_reason or '—' }}</td></tr>
+      <tr><th>撤销交易 ID</th><td>{{ result.payload.revoke_tx_id or '—' }}</td></tr>
+    </tbody>
+  </table>
+  <details class="raw">
+    <summary>查看链上原始 JSON</summary>
+    <pre class="pre">{{ result.text }}</pre>
+  </details>
+{% elif result and result.ok and result.text %}
+  <h3>返回内容</h3>
+  <pre class="pre">{{ result.text }}</pre>
+{% endif %}
+
+<script>
+  // 前端互斥校验（后端仍然会再校验一次）
+  document.getElementById('queryForm').addEventListener('submit', function (e) {
+    var certId = document.getElementById('cert_id').value.trim();
+    var studentId = document.getElementById('student_id').value.trim();
+    var name = document.getElementById('name').value.trim();
+    if (certId && (studentId || name)) {
+      alert('证书 ID 与学生 ID + 姓名不能同时填写，请二选一查询');
+      e.preventDefault();
+    } else if (!certId && !studentId && !name) {
+      alert('请填写证书 ID，或学生 ID + 姓名');
+      e.preventDefault();
+    } else if (!certId && !(studentId && name)) {
+      alert('按学生信息查询时，学生 ID 与姓名必须同时填写');
+      e.preventDefault();
+    }
+  });
+</script>
+{% endblock %}

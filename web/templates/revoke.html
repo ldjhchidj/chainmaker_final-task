@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>撤销证书</h2>
+<p class="hint">仅教育部账号（edu）可撤销。撤销后证书状态置为 revoked，并记录撤销原因、操作员与撤销交易 ID。</p>
+
+<form method="POST" class="card">
+  <div class="grid">
+    <div class="field">
+      <label for="cert_id">证书 ID <span class="req">*</span></label>
+      <input type="text" id="cert_id" name="cert_id" placeholder="例如：cert_2025211762_1a2b3c4d"
+             value="{{ form.cert_id|default('') }}" required>
+    </div>
+    <div class="field">
+      <label for="revoke_reason">撤销原因 <span class="req">*</span></label>
+      <input type="text" id="revoke_reason" name="revoke_reason" placeholder="例如：信息填报错误 / 学历造假"
+             value="{{ form.revoke_reason|default('') }}" required>
+    </div>
+    <div class="field">
+      <label for="operator_id">操作员</label>
+      <input type="text" id="operator_id" name="operator_id" value="{{ form.operator_id|default(user.username) }}"
+             readonly>
+    </div>
+  </div>
+  <div class="actions">
+    <button type="submit" class="btn btn-primary">撤销证书</button>
+    <a class="btn btn-secondary" href="{{ url_for('index') }}">返回首页</a>
+  </div>
+</form>
+
+{% include '_result.html' %}
+{% endblock %}

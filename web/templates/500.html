@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>500 · 服务器内部错误</h2>
+<p class="hint">服务端处理请求时出现异常，请查看 Flask 控制台日志定位原因。</p>
+<div class="actions">
+  <a class="btn btn-primary" href="{{ url_for('index') }}">返回首页</a>
+</div>
+{% endblock %}

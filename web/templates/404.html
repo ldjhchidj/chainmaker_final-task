@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>404 · 页面不存在</h2>
+<p class="hint">请求的地址不存在，请返回首页重新操作。</p>
+<div class="actions">
+  <a class="btn btn-primary" href="{{ url_for('index') }}">返回首页</a>
+</div>
+{% endblock %}

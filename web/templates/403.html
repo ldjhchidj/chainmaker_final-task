@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>403 · 无权限访问</h2>
+<div class="alert alert-danger">{{ message }}</div>
+<p class="hint">当前登录角色：{{ role|role_label }}（{{ role }}）。请使用具备相应权限的账号重新登录。</p>
+<div class="actions">
+  <a class="btn btn-primary" href="{{ url_for('logout') }}">切换账号</a>
+  <a class="btn btn-secondary" href="{{ url_for('index') }}">返回首页</a>
+</div>
+{% endblock %}

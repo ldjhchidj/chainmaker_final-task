@@ -1,0 +1,9 @@
+__pycache__/
+*.py[cod]
+*.db
+*.log
+*.7z
+cert-contract
+.venv/
+.env
+.DS_Store

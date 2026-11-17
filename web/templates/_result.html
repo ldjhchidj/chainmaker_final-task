@@ -1,0 +1,20 @@
+{# 统一的“调用结果”反馈区域：颁发 / 查询 / 撤销 / 校验 页面共用 #}
+{% if result %}
+  {% if result.error %}
+    <div class="alert alert-danger">
+      <strong>调用失败</strong>
+      <div class="alert-body">{{ result.error }}</div>
+    </div>
+  {% elif result.ok %}
+    <div class="alert alert-success">
+      <strong>操作成功</strong>
+      {% if result.text %}<div class="alert-body">{{ result.text }}</div>{% endif %}
+      {% if result.tx_id %}<div class="alert-body small">交易 ID：<code>{{ result.tx_id }}</code></div>{% endif %}
+    </div>
+  {% else %}
+    <div class="alert alert-danger">
+      <strong>合约返回错误（contract_result.code = {{ result.code }}）</strong>
+      <div class="alert-body">{{ result.message or '未知错误' }}</div>
+    </div>
+  {% endif %}
+{% endif %}

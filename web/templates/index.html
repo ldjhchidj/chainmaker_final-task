@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="page-head">
+  <h2>系统功能</h2>
+  <a class="btn btn-danger" href="{{ url_for('logout') }}">退出登录</a>
+</div>
+
+<p class="hint">
+  当前账号：<strong>{{ user.username }}</strong>　角色：<strong>{{ user.role|role_label }}</strong>
+  （{{ user.role }}）　—— 页面按角色动态展示可操作功能。
+</p>
+
+<div class="cards">
+  <div class="card">
+    <h3>查询证书</h3>
+    <p>输入学生 ID、姓名或证书 ID，查询链上证书详情、状态与哈希。</p>
+    <a class="btn btn-primary" href="{{ url_for('query_cert') }}">进入查询</a>
+  </div>
+
+  <div class="card">
+    <h3>证书验真</h3>
+    <p>重算链上证书内容的 SHA256 并与上链哈希比对，实现“真伪秒验”。</p>
+    <a class="btn btn-primary" href="{{ url_for('verify_cert') }}">进入验真</a>
+  </div>
+
+  {% if user.role == 'uni' %}
+  <div class="card">
+    <h3>颁发证书</h3>
+    <p>录入学生信息与学历信息并上链存证，合约自动生成证书 ID 与内容哈希。</p>
+    <a class="btn btn-primary" href="{{ url_for('issue_cert') }}">进入颁发</a>
+  </div>
+  {% endif %}
+
+  {% if user.role == 'edu' %}
+  <div class="card">
+    <h3>撤销证书</h3>
+    <p>对已颁发的证书执行撤销，写入撤销原因、操作员与撤销交易 ID。</p>
+    <a class="btn btn-primary" href="{{ url_for('revoke_cert') }}">进入撤销</a>
+  </div>
+  <div class="card">
+    <h3>全部证书台账</h3>
+    <p>遍历链上全部证书（含已撤销），以表格形式展示监管台账。</p>
+    <a class="btn btn-primary" href="{{ url_for('list_all_certs') }}">查看台账</a>
+  </div>
+  {% endif %}
+</div>
+
+<div class="notice">
+  <strong>说明：</strong>查询机构（query）仅可查询与验真；高校（uni）可颁发 + 查询；
+  教育部（edu）可颁发、查询、撤销并查看全量台账。越权访问会被前后端双重拦截。
+</div>
+{% endblock %}
